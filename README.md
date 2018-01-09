@@ -93,12 +93,9 @@ Or include Choices directly:
     noResultsText: 'No results found',
     noChoicesText: 'No choices to choose from',
     itemSelectText: 'Press to select',
-    addItemText: (value) => {
-      return `Press Enter to add <b>"${value}"</b>`;
-    },
-    maxItemText: (maxItemCount) => {
-      return `Only ${maxItemCount} values can be added.`;
-    },
+    addItemText: (value) => `Press Enter to add <b>"${value}"</b>`,
+    maxItemText: (maxItemCount) => `Only ${maxItemCount} values can be added.`,\
+    itemComparer: (choice, item) => choice === item,
     classNames: {
       containerOuter: 'choices',
       containerInner: 'choices__inner',
@@ -458,6 +455,13 @@ const example = new Choices(element, {
 
 **Usage:** The text that is shown when a user has focus on the input but has already reached the [max item count](https://github.com/jshjohnson/Choices#maxitemcount). To access the max item count, pass a function with a `maxItemCount` argument (see the [default config](https://github.com/jshjohnson/Choices#setup) for an example), otherwise pass a string.
 
+### itemComparer
+**Type:** `Function` **Default:** `strict equality`
+
+**Input types affected:** `select-one`, `select-multiple`
+
+**Usage:** Compare choice and value in appropriate way (e.g. deep equality for objects). To compare choice and value, pass a function with a `itemComparer` argument (see the [default config](https://github.com/jshjohnson/Choices#setup) for an example).
+
 ### classNames
 **Type:** `Object` **Default:**
 
@@ -613,6 +617,13 @@ example.passedElement.addEventListener('addItem', function(event) {
 **Input types affected:** `select-one`, `select-multiple`
 
 **Usage:** Triggered when a user types into an input to search choices.
+
+### stopSearch
+**Arguments:** -
+
+**Input types affected:** `select-one`, `select-multiple`
+
+**Usage:** Triggered when search is stopped.
 
 ### showDropdown
 **Arguments:** -
