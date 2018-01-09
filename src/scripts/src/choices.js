@@ -453,7 +453,8 @@ class Choices {
         if (activePlaceholders.length >= 1) {
           choiceListFragment = this.createChoicesFragment(activePlaceholders, choiceListFragment);
         }
-        choiceListFragment = this.createGroupsFragment(activeGroups, activeChoices, choiceListFragment);
+        choiceListFragment = this.createGroupsFragment(
+          activeGroups, activeChoices, choiceListFragment);
       } else if (activeChoices.length >= 1) {
         choiceListFragment = this.createChoicesFragment(activeChoices, choiceListFragment);
       }
@@ -607,7 +608,7 @@ class Choices {
     const items = this.store.getItemsFilteredByActive();
 
     items.forEach((item) => {
-      if (item.value === value) {
+      if (this.config.itemComparer(item.value, value)) {
         this._removeItem(item);
       }
     });
@@ -844,8 +845,7 @@ class Choices {
     this.input.clear(shouldSetInputWidth);
 
     if (!this.isTextElement && this.config.searchEnabled) {
-      this.isSearching = false;
-      this.store.dispatch(activateChoices(true));
+      this._stopSearch();
     }
 
     return this;
@@ -1125,7 +1125,7 @@ class Choices {
         return item.value === value.trim();
       }
 
-      return item.value === value;
+      return this.config.itemComparer(item.value, value);
     });
 
     if (!isUnique &&
@@ -1243,7 +1243,7 @@ class Choices {
     const hasUnactiveChoices = choices.some(option => !option.active);
 
     // Check that we have a value to search and the input was an alphanumeric character
-    if (value && value.length >= this.config.searchFloor) {
+    if (value.length >= this.config.searchFloor) {
       const resultCount = this.config.searchChoices ? this._searchChoices(value) : 0;
       // Trigger search event
       this.passedElement.triggerEvent(EVENTS.search, {
@@ -1252,8 +1252,7 @@ class Choices {
       });
     } else if (hasUnactiveChoices) {
       // Otherwise reset choices to active
-      this.isSearching = false;
-      this.store.dispatch(activateChoices(true));
+      this._stopSearch();
     }
   }
 
@@ -1514,9 +1513,8 @@ class Choices {
       // If user has removed value...
       if ((e.keyCode === backKey || e.keyCode === deleteKey) && !e.target.value) {
         // ...and it is a multiple select input, activate choices (if searching)
-        if (!this.isTextElement && this.isSearching) {
-          this.isSearching = false;
-          this.store.dispatch(activateChoices(true));
+        if (this.isSearching) {
+          this._stopSearch();
         }
       } else if (this.canSearch && canAddItem.response) {
         this._handleSearch(this.input.getValue());
@@ -2369,7 +2367,7 @@ class Choices {
   _findAndSelectChoiceByValue(val) {
     const choices = this.store.getChoices();
     // Check 'value' property exists and the choice isn't already selected
-    const foundChoice = choices.find(choice => choice.value === val);
+    const foundChoice = choices.find(choice => this.config.itemComparer(choice.value, val));
 
     if (foundChoice && !foundChoice.selected) {
       this._addItem(
@@ -2382,6 +2380,17 @@ class Choices {
         foundChoice.keyCode,
       );
     }
+  }
+
+  /**
+   * Stop search
+   * @return
+   * @private
+   */
+  _stopSearch() {
+    this.isSearching = false;
+    this.passedElement.triggerEvent(EVENTS.stopSearch, {});
+    this.store.dispatch(activateChoices(true));
   }
 
   /* =====  End of Private functions  ====== */
