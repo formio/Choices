@@ -1,4 +1,4 @@
-/*! choices.js v9.0.1 | © 2019 Josh Johnson | https://github.com/jshjohnson/Choices#readme */
+/*! choices.js v9.0.1 | © 2021 Josh Johnson | https://github.com/jshjohnson/Choices#readme */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -1891,6 +1891,7 @@ var DEFAULT_CONFIG = {
   shouldSort: true,
   shouldSortItems: false,
   sorter: sortByAlpha,
+  shadowRoot: null,
   placeholder: true,
   placeholderValue: null,
   searchPlaceholderValue: null,
@@ -3375,7 +3376,12 @@ function () {
       arrayMerge: function arrayMerge(_, sourceArray) {
         return [].concat(sourceArray);
       }
-    });
+    }); // Restore the shadowRoot if provided. deeperge converts it into an empty object.
+
+    if (userConfig.shadowRoot) {
+      this.config.shadowRoot = userConfig.shadowRoot;
+    }
+
     var invalidConfigOptions = diff(this.config, DEFAULT_CONFIG);
 
     if (invalidConfigOptions.length) {
@@ -4538,8 +4544,7 @@ function () {
   };
 
   _proto._addEventListeners = function _addEventListeners() {
-    var _document = document,
-        documentElement = _document.documentElement; // capture events - can cancel event processing or propagation
+    var documentElement = this.config.shadowRoot || document.documentElement; // capture events - can cancel event processing or propagation
 
     documentElement.addEventListener('touchend', this._onTouchEnd, true);
     this.containerOuter.element.addEventListener('keydown', this._onKeyDown, true);
@@ -4584,8 +4589,7 @@ function () {
   };
 
   _proto._removeEventListeners = function _removeEventListeners() {
-    var _document2 = document,
-        documentElement = _document2.documentElement;
+    var documentElement = this.config.shadowRoot || document.documentElement;
     documentElement.removeEventListener('touchend', this._onTouchEnd, true);
     this.containerOuter.element.removeEventListener('keydown', this._onKeyDown, true);
     this.containerOuter.element.removeEventListener('mousedown', this._onMouseDown, true);
