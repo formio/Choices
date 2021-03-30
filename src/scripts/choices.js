@@ -84,6 +84,10 @@ class Choices {
       // instead of concatenating with the default array
       { arrayMerge: (_, sourceArray) => [...sourceArray] },
     );
+    // Restore the shadowRoot if provided. deeperge converts it into an empty object.
+    if (userConfig.shadowRoot) {
+      this.config.shadowRoot = userConfig.shadowRoot;
+    }
 
     const invalidConfigOptions = diff(this.config, DEFAULT_CONFIG);
     if (invalidConfigOptions.length) {
@@ -1229,7 +1233,7 @@ class Choices {
   }
 
   _addEventListeners() {
-    const { documentElement } = document;
+    const documentElement = this.config.shadowRoot || document.documentElement;
 
     // capture events - can cancel event processing or propagation
     documentElement.addEventListener('touchend', this._onTouchEnd, true);
@@ -1283,7 +1287,7 @@ class Choices {
   }
 
   _removeEventListeners() {
-    const { documentElement } = document;
+    const documentElement = this.config.shadowRoot || document.documentElement;
 
     documentElement.removeEventListener('touchend', this._onTouchEnd, true);
     this.containerOuter.element.removeEventListener(
