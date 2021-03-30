@@ -1,4 +1,4 @@
-/*! choices.js v9.0.1 | © 2019 Josh Johnson | https://github.com/jshjohnson/Choices#readme */
+/*! choices.js v9.0.1 | © 2021 Josh Johnson | https://github.com/jshjohnson/Choices#readme */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -160,6 +160,7 @@ exports.DEFAULT_CONFIG = {
   shouldSort: true,
   shouldSortItems: false,
   sorter: utils_1.sortByAlpha,
+  shadowRoot: null,
   placeholder: true,
   placeholderValue: null,
   searchPlaceholderValue: null,
@@ -1388,7 +1389,12 @@ function () {
       arrayMerge: function arrayMerge(_, sourceArray) {
         return __spreadArrays(sourceArray);
       }
-    });
+    }); // Restore the shadowRoot if provided. deeperge converts it into an empty object.
+
+    if (userConfig.shadowRoot) {
+      this.config.shadowRoot = userConfig.shadowRoot;
+    }
+
     var invalidConfigOptions = utils_1.diff(this.config, constants_1.DEFAULT_CONFIG);
 
     if (invalidConfigOptions.length) {
@@ -2571,7 +2577,7 @@ function () {
   };
 
   Choices.prototype._addEventListeners = function () {
-    var documentElement = document.documentElement; // capture events - can cancel event processing or propagation
+    var documentElement = this.config.shadowRoot || document.documentElement; // capture events - can cancel event processing or propagation
 
     documentElement.addEventListener('touchend', this._onTouchEnd, true);
     this.containerOuter.element.addEventListener('keydown', this._onKeyDown, true);
@@ -2616,7 +2622,7 @@ function () {
   };
 
   Choices.prototype._removeEventListeners = function () {
-    var documentElement = document.documentElement;
+    var documentElement = this.config.shadowRoot || document.documentElement;
     documentElement.removeEventListener('touchend', this._onTouchEnd, true);
     this.containerOuter.element.removeEventListener('keydown', this._onKeyDown, true);
     this.containerOuter.element.removeEventListener('mousedown', this._onMouseDown, true);
@@ -3577,7 +3583,7 @@ function () {
   };
 
   Choices.prototype._generatePlaceholderValue = function () {
-    if (this._isSelectElement) {
+    if (this._isSelectElement && this.passedElement.placeholderOption) {
       var placeholderOption = this.passedElement.placeholderOption;
       return placeholderOption ? placeholderOption.text : null;
     }
