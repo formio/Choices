@@ -242,6 +242,10 @@ export interface Options {
      */
     resetScrollPosition: boolean;
     /**
+     * The shadow root for use within ShadowDom
+     */
+    shadowRoot: any;
+    /**
      * Whether choices and groups should be sorted. If false, choices/groups will appear in the order they were given.
      *
      * **Input types affected:** select-one, select-multiple

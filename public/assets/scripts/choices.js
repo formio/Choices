@@ -247,6 +247,10 @@ var Choices = /** @class */function () {
         return __spreadArray([], sourceArray, true);
       }
     });
+    // Restore the shadowRoot if provided. deeperge converts it into an empty object.
+    if (userConfig.shadowRoot) {
+      this.config.shadowRoot = userConfig.shadowRoot;
+    }
     var invalidConfigOptions = (0, utils_1.diff)(this.config, defaults_1.DEFAULT_CONFIG);
     if (invalidConfigOptions.length) {
       console.warn('Unknown config option(s) passed', invalidConfigOptions.join(', '));
@@ -1198,7 +1202,7 @@ var Choices = /** @class */function () {
     return results.length;
   };
   Choices.prototype._addEventListeners = function () {
-    var documentElement = document.documentElement;
+    var documentElement = this.config.shadowRoot || document.documentElement;
     // capture events - can cancel event processing or propagation
     documentElement.addEventListener('touchend', this._onTouchEnd, true);
     this.containerOuter.element.addEventListener('keydown', this._onKeyDown, true);
@@ -1238,7 +1242,7 @@ var Choices = /** @class */function () {
     this.input.addEventListeners();
   };
   Choices.prototype._removeEventListeners = function () {
-    var documentElement = document.documentElement;
+    var documentElement = this.config.shadowRoot || document.documentElement;
     documentElement.removeEventListener('touchend', this._onTouchEnd, true);
     this.containerOuter.element.removeEventListener('keydown', this._onKeyDown, true);
     this.containerOuter.element.removeEventListener('mousedown', this._onMouseDown, true);
@@ -2893,6 +2897,7 @@ exports.DEFAULT_CONFIG = {
   shouldSort: true,
   shouldSortItems: false,
   sorter: utils_1.sortByAlpha,
+  shadowRoot: null,
   placeholder: true,
   placeholderValue: null,
   searchPlaceholderValue: null,
