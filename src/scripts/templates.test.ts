@@ -573,7 +573,7 @@ describe('templates', () => {
       */
       const expectedOutput = strToEl(`
         <input
-          type="search"
+          type="text"
           name="search_terms"
           class="${inputOptions.classNames.input} ${inputOptions.classNames.inputCloned}"
           autocomplete="off"

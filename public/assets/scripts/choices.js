@@ -1294,14 +1294,21 @@ var Choices = /** @class */function () {
       case A_KEY:
         return this._onSelectKey(event, hasItems);
       case ENTER_KEY:
-        return this._onEnterKey(event, activeItems, hasActiveDropdown);
+        return this._onEnterKey({
+          event: event,
+          activeItems: activeItems,
+          hasActiveDropdown: hasActiveDropdown
+        });
       case ESC_KEY:
         return this._onEscapeKey(hasActiveDropdown);
       case UP_KEY:
       case PAGE_UP_KEY:
       case DOWN_KEY:
       case PAGE_DOWN_KEY:
-        return this._onDirectionKey(event, hasActiveDropdown);
+        return this._onDirectionKey({
+          event: event,
+          hasActiveDropdown: hasActiveDropdown
+        });
       case DELETE_KEY:
       case BACK_KEY:
         return this._onDeleteKey(event, activeItems, hasFocusedInput);
@@ -1354,7 +1361,10 @@ var Choices = /** @class */function () {
       }
     }
   };
-  Choices.prototype._onEnterKey = function (event, activeItems, hasActiveDropdown) {
+  Choices.prototype._onEnterKey = function (eventArgs) {
+    var event = eventArgs.event,
+      activeItems = eventArgs.activeItems,
+      hasActiveDropdown = eventArgs.hasActiveDropdown;
     var target = event.target;
     var enterKey = constants_1.KEY_CODES.ENTER_KEY;
     var targetWasButton = target && target.hasAttribute('data-button');
@@ -1396,7 +1406,9 @@ var Choices = /** @class */function () {
       this.containerOuter.focus();
     }
   };
-  Choices.prototype._onDirectionKey = function (event, hasActiveDropdown) {
+  Choices.prototype._onDirectionKey = function (eventArgs) {
+    var event = eventArgs.event,
+      hasActiveDropdown = eventArgs.hasActiveDropdown;
     var keyCode = event.keyCode,
       metaKey = event.metaKey;
     var downKey = constants_1.KEY_CODES.DOWN_KEY,
@@ -4058,7 +4070,7 @@ var templates = {
       input = _b.input,
       inputCloned = _b.inputCloned;
     var inp = Object.assign(document.createElement('input'), {
-      type: 'search',
+      type: 'text',
       name: 'search_terms',
       className: "".concat(input, " ").concat(inputCloned),
       autocomplete: 'off',

@@ -1477,14 +1477,14 @@ class Choices implements Choices {
       case A_KEY:
         return this._onSelectKey(event, hasItems);
       case ENTER_KEY:
-        return this._onEnterKey(event, activeItems, hasActiveDropdown);
+        return this._onEnterKey({ event, activeItems, hasActiveDropdown });
       case ESC_KEY:
         return this._onEscapeKey(hasActiveDropdown);
       case UP_KEY:
       case PAGE_UP_KEY:
       case DOWN_KEY:
       case PAGE_DOWN_KEY:
-        return this._onDirectionKey(event, hasActiveDropdown);
+        return this._onDirectionKey({ event, hasActiveDropdown });
       case DELETE_KEY:
       case BACK_KEY:
         return this._onDeleteKey(event, activeItems, hasFocusedInput);
@@ -1550,11 +1550,8 @@ class Choices implements Choices {
     }
   }
 
-  _onEnterKey(
-    event: KeyboardEvent,
-    activeItems: Item[],
-    hasActiveDropdown: boolean,
-  ): void {
+  _onEnterKey(eventArgs: any): void {
+    const { event, activeItems, hasActiveDropdown } = eventArgs;
     const { target } = event;
     const { ENTER_KEY: enterKey } = KEY_CODES;
     const targetWasButton =
@@ -1604,7 +1601,8 @@ class Choices implements Choices {
     }
   }
 
-  _onDirectionKey(event: KeyboardEvent, hasActiveDropdown: boolean): void {
+  _onDirectionKey(eventArgs: any): void {
+    const { event, hasActiveDropdown } = eventArgs;
     const { keyCode, metaKey } = event;
     const {
       DOWN_KEY: downKey,
