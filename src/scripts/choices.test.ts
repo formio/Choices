@@ -2209,11 +2209,10 @@ describe('choices', () => {
             };
 
             instance._onKeyDown(event);
-
-            expect(instance._onDirectionKey).to.have.been.calledWith(
+            expect(instance._onDirectionKey).to.have.been.calledWith({
               event,
               hasActiveDropdown,
-            );
+            });
           });
         });
       });
@@ -2241,11 +2240,11 @@ describe('choices', () => {
 
           instance._onKeyDown(event);
 
-          expect(instance._onEnterKey).to.have.been.calledWith(
+          expect(instance._onEnterKey).to.have.been.calledWith({
             event,
             activeItems,
             hasActiveDropdown,
-          );
+          });
         });
       });
 
