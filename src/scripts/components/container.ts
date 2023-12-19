@@ -61,7 +61,7 @@ export default class Container {
    * Determine whether container should be flipped based on passed
    * dropdown position
    */
-  shouldFlip(dropdownPos: number): boolean {
+  shouldFlip(dropdownPos: number, dropdownHeight: number, containerElem: HTMLElement): boolean {
     if (typeof dropdownPos !== 'number') {
       return false;
     }
@@ -72,6 +72,11 @@ export default class Container {
     if (this.position === 'auto') {
       shouldFlip = !window.matchMedia(`(min-height: ${dropdownPos + 1}px)`)
         .matches;
+      if (shouldFlip) {
+        if (containerElem.getBoundingClientRect().top - dropdownHeight < 0) {
+          shouldFlip = false;
+        }
+      }
     } else if (this.position === 'top') {
       shouldFlip = true;
     }
@@ -87,12 +92,12 @@ export default class Container {
     this.element.removeAttribute('aria-activedescendant');
   }
 
-  open(dropdownPos: number): void {
+  open(dropdownPos: number, dropdownHeight: number): void {
     this.element.classList.add(this.classNames.openState);
     this.element.setAttribute('aria-expanded', 'true');
     this.isOpen = true;
 
-    if (this.shouldFlip(dropdownPos)) {
+    if (this.shouldFlip(dropdownPos, dropdownHeight, this.element)) {
       this.element.classList.add(this.classNames.flippedState);
       this.isFlipped = true;
     }
