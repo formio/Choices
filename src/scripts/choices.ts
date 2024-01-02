@@ -504,7 +504,7 @@ class Choices implements Choices {
 
     requestAnimationFrame(() => {
       this.dropdown.show();
-      this.containerOuter.open(this.dropdown.distanceFromTopWindow);
+      this.containerOuter.open(this.dropdown.distanceFromTopWindow, this.dropdown.height);
 
       if (!preventInputFocus && this._canSearch) {
         this.input.focus();

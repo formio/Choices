@@ -32,6 +32,10 @@ export default class Dropdown {
     return this.element.getBoundingClientRect().bottom;
   }
 
+  get height(): number {
+    return this.element.getBoundingClientRect().height;
+  }
+
   getChild(selector: string): HTMLElement | null {
     return this.element.querySelector(selector);
   }

@@ -110,7 +110,7 @@ describe('components/container', () => {
         });
 
         it('returns true', () => {
-          expect(instance.shouldFlip(100)).to.equal(true);
+          expect(instance.shouldFlip(100, 100, element)).to.equal(true);
         });
       });
 
@@ -120,7 +120,7 @@ describe('components/container', () => {
         });
 
         it('returns false', () => {
-          expect(instance.shouldFlip(100)).to.equal(false);
+          expect(instance.shouldFlip(100, 100, element)).to.equal(false);
         });
       });
     });
