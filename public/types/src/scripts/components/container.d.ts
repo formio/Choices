@@ -23,10 +23,10 @@ export default class Container {
      * Determine whether container should be flipped based on passed
      * dropdown position
      */
-    shouldFlip(dropdownPos: number): boolean;
+    shouldFlip(dropdownPos: number, dropdownHeight: number, containerElem: HTMLElement): boolean;
     setActiveDescendant(activeDescendantID: string): void;
     removeActiveDescendant(): void;
-    open(dropdownPos: number): void;
+    open(dropdownPos: number, dropdownHeight: number): void;
     close(): void;
     focus(): void;
     addFocusState(): void;

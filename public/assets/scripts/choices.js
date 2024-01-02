@@ -1,4 +1,4 @@
-/*! @formio/choices.js v10.2.0 | © 2023 Josh Johnson | https://github.com/jshjohnson/Choices#readme */
+/*! @formio/choices.js v10.2.1-rc.1 | © 2024 Josh Johnson | https://github.com/jshjohnson/Choices#readme */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -543,7 +543,7 @@ var Choices = /** @class */function () {
     }
     requestAnimationFrame(function () {
       _this.dropdown.show();
-      _this.containerOuter.open(_this.dropdown.distanceFromTopWindow);
+      _this.containerOuter.open(_this.dropdown.distanceFromTopWindow, _this.dropdown.height);
       if (!preventInputFocus && _this._canSearch) {
         _this.input.focus();
       }
@@ -2129,7 +2129,7 @@ var Container = /** @class */function () {
    * Determine whether container should be flipped based on passed
    * dropdown position
    */
-  Container.prototype.shouldFlip = function (dropdownPos) {
+  Container.prototype.shouldFlip = function (dropdownPos, dropdownHeight, containerElem) {
     if (typeof dropdownPos !== 'number') {
       return false;
     }
@@ -2138,6 +2138,11 @@ var Container = /** @class */function () {
     var shouldFlip = false;
     if (this.position === 'auto') {
       shouldFlip = !window.matchMedia("(min-height: ".concat(dropdownPos + 1, "px)")).matches;
+      if (shouldFlip) {
+        if (containerElem.getBoundingClientRect().top - dropdownHeight < 0) {
+          shouldFlip = false;
+        }
+      }
     } else if (this.position === 'top') {
       shouldFlip = true;
     }
@@ -2149,11 +2154,11 @@ var Container = /** @class */function () {
   Container.prototype.removeActiveDescendant = function () {
     this.element.removeAttribute('aria-activedescendant');
   };
-  Container.prototype.open = function (dropdownPos) {
+  Container.prototype.open = function (dropdownPos, dropdownHeight) {
     this.element.classList.add(this.classNames.openState);
     this.element.setAttribute('aria-expanded', 'true');
     this.isOpen = true;
-    if (this.shouldFlip(dropdownPos)) {
+    if (this.shouldFlip(dropdownPos, dropdownHeight, this.element)) {
       this.element.classList.add(this.classNames.flippedState);
       this.isFlipped = true;
     }
@@ -2253,6 +2258,13 @@ var Dropdown = /** @class */function () {
      */
     get: function () {
       return this.element.getBoundingClientRect().bottom;
+    },
+    enumerable: false,
+    configurable: true
+  });
+  Object.defineProperty(Dropdown.prototype, "height", {
+    get: function () {
+      return this.element.getBoundingClientRect().height;
     },
     enumerable: false,
     configurable: true
