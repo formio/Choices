@@ -1,4 +1,4 @@
-/*! @formio/choices.js v10.2.1-rc.1 | © 2024 Josh Johnson | https://github.com/jshjohnson/Choices#readme */
+/*! @formio/choices.js v10.2.1 | © 2024 Josh Johnson | https://github.com/jshjohnson/Choices#readme */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
