@@ -5,7 +5,7 @@ on:
     paths:
       - 'src/scripts/**'
       - 'src/styles/**'
-      - package-lock.json
+      - yarn.lock
       - '.browserslistrc'
 
 jobs:
@@ -21,13 +21,13 @@ jobs:
           node-version: 18
 
       - name: Install dependencies
-        run: npm ci
+        run: yarn install --frozen-lockfile
         env:
           CYPRESS_INSTALL_BINARY: 0
           HUSKY_SKIP_INSTALL: true
 
       - name: run eslint
-        run: npm run lint:js
+        run: yarn lint:js
 
       ## Can't use same eslint config for TypeScript and JavaScript
       ## TypeScript rules cause rule definition not found errors
@@ -38,4 +38,4 @@ jobs:
       #     npx eslint --no-ignore ./public/assets/scripts/*.js
 
       - name: run stylelint
-        run: npm run lint:scss
+        run: yarn lint:scss
