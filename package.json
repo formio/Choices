@@ -1,8 +1,7 @@
 {
-  "name": "choices.js",
+  "name": "@formio/choices.js",
   "version": "11.0.3",
   "description": "A vanilla JS customisable text input/select box plugin",
-  "type": "module",
   "main": "./public/assets/scripts/choices.js",
   "module": "./public/assets/scripts/choices.mjs",
   "unpkg": "./public/assets/scripts/choices.js",
