@@ -108,7 +108,7 @@
   margin-bottom: 0;
   margin-left: 8px;
   padding-left: 16px;
-  border-left: 1px solid #003642;
+  border-left: 1px solid rgb(0, 53.5897435897, 66);
   background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjEiIGhlaWdodD0iMjEiIHZpZXdCb3g9IjAgMCAyMSAyMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSIjRkZGIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yLjU5Mi4wNDRsMTguMzY0IDE4LjM2NC0yLjU0OCAyLjU0OEwuMDQ0IDIuNTkyeiIvPjxwYXRoIGQ9Ik0wIDE4LjM2NEwxOC4zNjQgMGwyLjU0OCAyLjU0OEwyLjU0OCAyMC45MTJ6Ii8+PC9nPjwvc3ZnPg==");
   background-size: 8px;
   width: 8px;
@@ -135,7 +135,7 @@
   overflow: hidden;
 }
 .is-focused .choices__inner, .is-open .choices__inner {
-  border-color: #b7b7b7;
+  border-color: rgb(182.75, 182.75, 182.75);
 }
 .is-open .choices__inner {
   border-radius: 2.5px 2.5px 0 0;
@@ -175,7 +175,7 @@
   margin-right: 3.75px;
   margin-bottom: 3.75px;
   background-color: #005F75;
-  border: 1px solid #004a5c;
+  border: 1px solid rgb(0, 74.2948717949, 91.5);
   color: #fff;
   word-break: break-all;
   box-sizing: border-box;
@@ -188,12 +188,12 @@
   margin-left: 3.75px;
 }
 .choices__list--multiple .choices__item.is-highlighted {
-  background-color: #004a5c;
-  border: 1px solid #003642;
+  background-color: rgb(0, 74.2948717949, 91.5);
+  border: 1px solid rgb(0, 53.5897435897, 66);
 }
 .is-disabled .choices__list--multiple .choices__item {
-  background-color: #aaaaaa;
-  border: 1px solid #919191;
+  background-color: rgb(170.25, 170.25, 170.25);
+  border: 1px solid rgb(144.75, 144.75, 144.75);
 }
 
 .choices__list--dropdown, .choices__list[aria-expanded] {
@@ -214,7 +214,7 @@
   display: block;
 }
 .is-open .choices__list--dropdown, .is-open .choices__list[aria-expanded] {
-  border-color: #b7b7b7;
+  border-color: rgb(182.75, 182.75, 182.75);
 }
 .is-flipped .choices__list--dropdown, .is-flipped .choices__list[aria-expanded] {
   top: auto;
@@ -262,7 +262,7 @@
   }
 }
 .choices__list--dropdown .choices__item--selectable.is-highlighted, .choices__list[aria-expanded] .choices__item--selectable.is-highlighted {
-  background-color: #f2f2f2;
+  background-color: rgb(242.25, 242.25, 242.25);
 }
 .choices__list--dropdown .choices__item--selectable.is-highlighted::after, .choices__list[aria-expanded] .choices__item--selectable.is-highlighted::after {
   opacity: 0.5;
@@ -287,8 +287,8 @@
   font-weight: 600;
   font-size: 12px;
   padding: 10px;
-  border-bottom: 1px solid #f7f7f7;
-  color: gray;
+  border-bottom: 1px solid rgb(246.5, 246.5, 246.5);
+  color: rgb(127.5, 127.5, 127.5);
 }
 
 .choices__button {

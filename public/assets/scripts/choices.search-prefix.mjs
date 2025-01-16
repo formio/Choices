@@ -1,4 +1,4 @@
-/*! choices.js v11.0.3 | © 2024 Josh Johnson | https://github.com/jshjohnson/Choices#readme */
+/*! choices.js v11.0.3-rc.1 | © 2025 Josh Johnson | https://github.com/jshjohnson/Choices#readme */
 
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -14,7 +14,7 @@ LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
 OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 ***************************************************************************** */
-/* global Reflect, Promise, SuppressedError, Symbol */
+/* global Reflect, Promise, SuppressedError, Symbol, Iterator */
 
 var extendStatics = function (d, b) {
   extendStatics = Object.setPrototypeOf || {
@@ -143,7 +143,7 @@ var generateId = function (element, prefix) {
     return id;
 };
 var getAdjacentEl = function (startEl, selector, direction) {
-    if (direction === void 0) { direction = 1; }
+    if (direction === undefined) { direction = 1; }
     var prop = "".concat(direction > 0 ? 'next' : 'previous', "ElementSibling");
     var sibling = startEl[prop];
     while (sibling) {
@@ -155,7 +155,7 @@ var getAdjacentEl = function (startEl, selector, direction) {
     return null;
 };
 var isScrolledIntoView = function (element, parent, direction) {
-    if (direction === void 0) { direction = 1; }
+    if (direction === undefined) { direction = 1; }
     var isVisible;
     if (direction > 0) {
         // In view from bottom
@@ -241,8 +241,8 @@ var setElementHtml = function (el, allowHtml, html) {
     el.innerHTML = escapeForTemplate(allowHtml, html);
 };
 var sortByAlpha = function (_a, _b) {
-    var value = _a.value, _c = _a.label, label = _c === void 0 ? value : _c;
-    var value2 = _b.value, _d = _b.label, label2 = _d === void 0 ? value2 : _d;
+    var value = _a.value, _c = _a.label, label = _c === undefined ? value : _c;
+    var value2 = _b.value, _d = _b.label, label2 = _d === undefined ? value2 : _d;
     return unwrapStringForRaw(label).localeCompare(unwrapStringForRaw(label2), [], {
         sensitivity: 'base',
         ignorePunctuation: true,
@@ -253,7 +253,7 @@ var sortByRank = function (a, b) {
     return a.rank - b.rank;
 };
 var dispatchEvent = function (element, type, customArgs) {
-    if (customArgs === void 0) { customArgs = null; }
+    if (customArgs === undefined) { customArgs = null; }
     var event = new CustomEvent(type, {
         detail: customArgs,
         bubbles: true,
@@ -525,7 +525,7 @@ var Input = /** @class */ (function () {
         }
     };
     Input.prototype.clear = function (setWidth) {
-        if (setWidth === void 0) { setWidth = true; }
+        if (setWidth === undefined) { setWidth = true; }
         this.element.value = '';
         if (setWidth) {
             this.setWidth();
@@ -729,7 +729,7 @@ var WrappedInput = /** @class */ (function (_super) {
 }(WrappedElement));
 
 var coerceBool = function (arg, defaultValue) {
-    if (defaultValue === void 0) { defaultValue = true; }
+    if (defaultValue === undefined) { defaultValue = true; }
     return typeof arg === 'undefined' ? defaultValue : !!arg;
 };
 var stringToHtmlClass = function (input) {
@@ -742,11 +742,15 @@ var stringToHtmlClass = function (input) {
     }
     return undefined;
 };
-var mapInputToChoice = function (value, allowGroup) {
+var mapInputToChoice = function (value, allowGroup, allowRawString) {
+    if (allowRawString === undefined) { allowRawString = true; }
     if (typeof value === 'string') {
+        var sanitisedValue = sanitise(value);
+        var userValue = allowRawString || sanitisedValue === value ? value : { escaped: sanitisedValue, raw: value };
         var result_1 = mapInputToChoice({
             value: value,
-            label: value,
+            label: userValue,
+            selected: true,
         }, false);
         return result_1;
     }
@@ -1615,7 +1619,7 @@ var templates = {
     },
     notice: function (_a, innerHTML, type) {
         var _b = _a.classNames, item = _b.item, itemChoice = _b.itemChoice, addChoice = _b.addChoice, noResults = _b.noResults, noChoices = _b.noChoices, noticeItem = _b.notice;
-        if (type === void 0) { type = NoticeTypes.generic; }
+        if (type === undefined) { type = NoticeTypes.generic; }
         var notice = document.createElement('div');
         setElementHtml(notice, true, innerHTML);
         addClassesToElement(notice, item);
@@ -1669,8 +1673,8 @@ var selectableChoiceIdentifier = '[data-choice-selectable]';
  */
 var Choices = /** @class */ (function () {
     function Choices(element, userConfig) {
-        if (element === void 0) { element = '[data-choice]'; }
-        if (userConfig === void 0) { userConfig = {}; }
+        if (element === undefined) { element = '[data-choice]'; }
+        if (userConfig === undefined) { userConfig = {}; }
         var _this = this;
         this.initialisedOK = undefined;
         this._hasNonChoicePlaceholder = false;
@@ -1889,7 +1893,7 @@ var Choices = /** @class */ (function () {
         return this;
     };
     Choices.prototype.highlightItem = function (item, runEvent) {
-        if (runEvent === void 0) { runEvent = true; }
+        if (runEvent === undefined) { runEvent = true; }
         if (!item || !item.id) {
             return this;
         }
@@ -1904,7 +1908,7 @@ var Choices = /** @class */ (function () {
         return this;
     };
     Choices.prototype.unhighlightItem = function (item, runEvent) {
-        if (runEvent === void 0) { runEvent = true; }
+        if (runEvent === undefined) { runEvent = true; }
         if (!item || !item.id) {
             return this;
         }
@@ -1961,7 +1965,7 @@ var Choices = /** @class */ (function () {
     };
     Choices.prototype.removeHighlightedItems = function (runEvent) {
         var _this = this;
-        if (runEvent === void 0) { runEvent = false; }
+        if (runEvent === undefined) { runEvent = false; }
         this._store.withTxn(function () {
             _this._store.highlightedActiveItems.forEach(function (item) {
                 _this._removeItem(item);
@@ -2115,11 +2119,11 @@ var Choices = /** @class */ (function () {
      */
     Choices.prototype.setChoices = function (choicesArrayOrFetcher, value, label, replaceChoices, clearSearchFlag) {
         var _this = this;
-        if (choicesArrayOrFetcher === void 0) { choicesArrayOrFetcher = []; }
-        if (value === void 0) { value = 'value'; }
-        if (label === void 0) { label = 'label'; }
-        if (replaceChoices === void 0) { replaceChoices = false; }
-        if (clearSearchFlag === void 0) { clearSearchFlag = true; }
+        if (choicesArrayOrFetcher === undefined) { choicesArrayOrFetcher = []; }
+        if (value === undefined) { value = 'value'; }
+        if (label === undefined) { label = 'label'; }
+        if (replaceChoices === undefined) { replaceChoices = false; }
+        if (clearSearchFlag === undefined) { clearSearchFlag = true; }
         if (!this.initialisedOK) {
             this._warnChoicesInitFailed('setChoices');
             return this;
@@ -2193,9 +2197,9 @@ var Choices = /** @class */ (function () {
     };
     Choices.prototype.refresh = function (withEvents, selectFirstOption, deselectAll) {
         var _this = this;
-        if (withEvents === void 0) { withEvents = false; }
-        if (selectFirstOption === void 0) { selectFirstOption = false; }
-        if (deselectAll === void 0) { deselectAll = false; }
+        if (withEvents === undefined) { withEvents = false; }
+        if (selectFirstOption === undefined) { selectFirstOption = false; }
+        if (deselectAll === undefined) { deselectAll = false; }
         if (!this._isSelectElement) {
             if (!this.config.silent) {
                 console.warn('refresh method can only be used on choices backed by a <select> element');
@@ -2278,7 +2282,7 @@ var Choices = /** @class */ (function () {
         return this;
     };
     Choices.prototype.clearStore = function (clearOptions) {
-        if (clearOptions === void 0) { clearOptions = true; }
+        if (clearOptions === undefined) { clearOptions = true; }
         this._stopSearch();
         if (clearOptions) {
             this.passedElement.element.replaceChildren('');
@@ -2314,7 +2318,7 @@ var Choices = /** @class */ (function () {
         }
     };
     Choices.prototype._render = function (changes) {
-        if (changes === void 0) { changes = { choices: true, groups: true, items: true }; }
+        if (changes === undefined) { changes = { choices: true, groups: true, items: true }; }
         if (this._store.inTxn()) {
             return;
         }
@@ -2488,7 +2492,7 @@ var Choices = /** @class */ (function () {
         }
     };
     Choices.prototype._displayNotice = function (text, type, openDropdown) {
-        if (openDropdown === void 0) { openDropdown = true; }
+        if (openDropdown === undefined) { openDropdown = true; }
         var oldNotice = this._notice;
         if (oldNotice &&
             ((oldNotice.type === type && oldNotice.text === text) ||
@@ -2590,7 +2594,7 @@ var Choices = /** @class */ (function () {
     };
     Choices.prototype._handleItemAction = function (element, hasShiftKey) {
         var _this = this;
-        if (hasShiftKey === void 0) { hasShiftKey = false; }
+        if (hasShiftKey === undefined) { hasShiftKey = false; }
         var items = this._store.items;
         if (!items.length || !this.config.removeItems || this._isSelectOneElement) {
             return;
@@ -2666,6 +2670,7 @@ var Choices = /** @class */ (function () {
     };
     Choices.prototype._loadChoices = function () {
         var _a;
+        var _this = this;
         var config = this.config;
         if (this._isTextElement) {
             // Assign preset items from passed object first
@@ -2674,7 +2679,7 @@ var Choices = /** @class */ (function () {
             if (this.passedElement.value) {
                 var elementItems = this.passedElement.value
                     .split(config.delimiter)
-                    .map(function (e) { return mapInputToChoice(e, false); });
+                    .map(function (e) { return mapInputToChoice(e, false, _this.config.allowHtmlUserInput); });
                 this._presetChoices = this._presetChoices.concat(elementItems);
             }
             this._presetChoices.forEach(function (choice) {
@@ -2692,7 +2697,7 @@ var Choices = /** @class */ (function () {
         }
     };
     Choices.prototype._handleLoadingState = function (setLoading) {
-        if (setLoading === void 0) { setLoading = true; }
+        if (setLoading === undefined) { setLoading = true; }
         var el = this.itemList.element;
         if (setLoading) {
             this.disable();
@@ -3026,13 +3031,7 @@ var Choices = /** @class */ (function () {
                 if (!_this._canCreateItem(value)) {
                     return;
                 }
-                var sanitisedValue = sanitise(value);
-                var userValue = _this.config.allowHtmlUserInput || sanitisedValue === value ? value : { escaped: sanitisedValue, raw: value };
-                _this._addChoice(mapInputToChoice({
-                    value: userValue,
-                    label: userValue,
-                    selected: true,
-                }, false), true, true);
+                _this._addChoice(mapInputToChoice(value, false, _this.config.allowHtmlUserInput), true, true);
                 addedItem = true;
             }
             _this.clearInput();
@@ -3061,7 +3060,7 @@ var Choices = /** @class */ (function () {
             this._canSearch = false;
             var directionInt = keyCode === KeyCodeMap.DOWN_KEY || keyCode === KeyCodeMap.PAGE_DOWN_KEY ? 1 : -1;
             var skipKey = event.metaKey || keyCode === KeyCodeMap.PAGE_DOWN_KEY || keyCode === KeyCodeMap.PAGE_UP_KEY;
-            var nextEl = void 0;
+            var nextEl = undefined;
             if (skipKey) {
                 if (directionInt > 0) {
                     nextEl = this.dropdown.element.querySelector("".concat(selectableChoiceIdentifier, ":last-of-type"));
@@ -3260,7 +3259,7 @@ var Choices = /** @class */ (function () {
         });
     };
     Choices.prototype._highlightChoice = function (el) {
-        if (el === void 0) { el = null; }
+        if (el === undefined) { el = null; }
         var choices = Array.from(this.dropdown.element.querySelectorAll(selectableChoiceIdentifier));
         if (!choices.length) {
             return;
@@ -3303,8 +3302,8 @@ var Choices = /** @class */ (function () {
         }
     };
     Choices.prototype._addItem = function (item, withEvents, userTriggered) {
-        if (withEvents === void 0) { withEvents = true; }
-        if (userTriggered === void 0) { userTriggered = false; }
+        if (withEvents === undefined) { withEvents = true; }
+        if (userTriggered === undefined) { userTriggered = false; }
         if (!item.id) {
             throw new TypeError('item.id must be set before _addItem is called for a choice/item');
         }
@@ -3327,8 +3326,8 @@ var Choices = /** @class */ (function () {
         this.passedElement.triggerEvent(EventType.removeItem, this._getChoiceForOutput(item));
     };
     Choices.prototype._addChoice = function (choice, withEvents, userTriggered) {
-        if (withEvents === void 0) { withEvents = true; }
-        if (userTriggered === void 0) { userTriggered = false; }
+        if (withEvents === undefined) { withEvents = true; }
+        if (userTriggered === undefined) { userTriggered = false; }
         if (choice.id) {
             throw new TypeError('Can not re-add a choice which has already been added');
         }
@@ -3359,7 +3358,7 @@ var Choices = /** @class */ (function () {
     };
     Choices.prototype._addGroup = function (group, withEvents) {
         var _this = this;
-        if (withEvents === void 0) { withEvents = true; }
+        if (withEvents === undefined) { withEvents = true; }
         if (group.id) {
             throw new TypeError('Can not re-add a group which has already been added');
         }
@@ -3473,8 +3472,8 @@ var Choices = /** @class */ (function () {
     };
     Choices.prototype._addPredefinedChoices = function (choices, selectFirstOption, withEvents) {
         var _this = this;
-        if (selectFirstOption === void 0) { selectFirstOption = false; }
-        if (withEvents === void 0) { withEvents = true; }
+        if (selectFirstOption === undefined) { selectFirstOption = false; }
+        if (withEvents === undefined) { withEvents = true; }
         if (selectFirstOption) {
             /**
              * If there is a selected choice already or the choice is not the first in
@@ -3506,7 +3505,7 @@ var Choices = /** @class */ (function () {
     };
     Choices.prototype._findAndSelectChoiceByValue = function (value, userTriggered) {
         var _this = this;
-        if (userTriggered === void 0) { userTriggered = false; }
+        if (userTriggered === undefined) { userTriggered = false; }
         // Check 'value' property exists and the choice isn't already selected
         var foundChoice = this._store.choices.find(function (choice) { return _this.config.valueComparer(choice.value, value); });
         if (foundChoice && !foundChoice.disabled && !foundChoice.selected) {
@@ -3540,7 +3539,7 @@ var Choices = /** @class */ (function () {
             throw new TypeError("".concat(caller, " called for an element which has multiple instances of Choices initialised on it"));
         }
     };
-    Choices.version = '11.0.3';
+    Choices.version = '11.0.3-rc.1';
     return Choices;
 }());
 

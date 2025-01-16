@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased: 11.0.3-rc.1]
+## 11.0.3-rc.1
 
 ### Bug Fixes (from 11.0.0)
 * Fix input text - method setValue didn't work [#1207](https://github.com/Choices-js/Choices/issues/1207)
