@@ -1,5 +1,9 @@
 # Changelog
 
+## 11.0.3
+### Changed
+ - Official Release
+
 ## 11.0.3-rc.1
 
 ### Bug Fixes (from 11.0.0)

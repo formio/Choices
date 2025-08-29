@@ -1,4 +1,4 @@
-/*! choices.js v11.0.3-rc.1 | © 2025 Josh Johnson | https://github.com/jshjohnson/Choices#readme */
+/*! choices.js v11.0.3 | © 2025 Josh Johnson | https://github.com/jshjohnson/Choices#readme */
 
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -4700,7 +4700,7 @@
                 throw new TypeError("".concat(caller, " called for an element which has multiple instances of Choices initialised on it"));
             }
         };
-        Choices.version = '11.0.3-rc.1';
+        Choices.version = '11.0.3';
         return Choices;
     }());
 
